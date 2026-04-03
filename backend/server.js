@@ -58,6 +58,7 @@ app.use('/api/demand', require('./routes/demandRoutes'));                  // Fe
 app.use('/api/chatbot', require('./routes/chatbotRoutes'));                // Feature 10: Chatbot
 app.use('/api/payments', require('./routes/paymentRoutes'));               // Payment Gateway Integration
 app.use('/api/reminders', require('./routes/reminderRoutes'));             // Medicine Intake Reminders
+app.use('/api/seed', require('./routes/seedRoutes'));                      // Database Seeding (production)
 // Features 1,2,5,6,7,8 already handled by existing routes (smart-search, inventory, orders, compare, pharmacies)
 
 // Initialize Schedulers

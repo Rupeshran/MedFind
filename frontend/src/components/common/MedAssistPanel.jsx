@@ -32,7 +32,7 @@ export default function MedAssistPanel() {
   
   
   // Global State
-  const { language } = useLanguage()
+  const { lang } = useLanguage()
   const [userLocation, setUserLocation] = useState(null)
   const [locationLoading, setLocationLoading] = useState(false)
   
@@ -119,7 +119,7 @@ export default function MedAssistPanel() {
     setChatLoading(true)
 
     try {
-      const { data } = await api.post('/chatbot/query', { message: q, lang: language })
+      const { data } = await api.post('/chatbot/query', { message: q, lang })
       setMessages(prev => [...prev, { 
         type: 'bot', 
         text: data.response?.text || 'I could not understand that.', 

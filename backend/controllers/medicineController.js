@@ -2,33 +2,66 @@ const Medicine = require('../models/Medicine');
 const Inventory = require('../models/Inventory');
 const Pharmacy = require('../models/Pharmacy');
 
-// @GET /api/medicines?q=&category=&page=
+// ── Helper: Escape regex special characters ────────────────────────
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// @GET /api/medicines?q=&category=&page=&limit=&sort=
 exports.getMedicines = async (req, res) => {
   try {
-    const { q, category, page = 1, limit = 20 } = req.query;
+    const { q, category, page = 1, limit = 20, sort } = req.query;
     const query = { isActive: true };
 
-    if (q) {
-      query.$text = { $search: q };
-      // Increment search count
-      await Medicine.updateMany(
-        { $text: { $search: q } },
+    // ── Regex-based search across name, brand, composition ──
+    if (q && q.trim()) {
+      const safeQuery = escapeRegex(q.trim());
+      const regex = new RegExp(safeQuery, 'i'); // case-insensitive partial match
+      query.$or = [
+        { name: { $regex: regex } },
+        { brand: { $regex: regex } },
+        { composition: { $regex: regex } },
+      ];
+
+      // Increment search count for matching medicines (fire-and-forget)
+      Medicine.updateMany(
+        { isActive: true, $or: [{ name: { $regex: regex } }, { brand: { $regex: regex } }, { composition: { $regex: regex } }] },
         { $inc: { searchCount: 1 } }
-      );
+      ).catch(() => {}); // non-blocking, don't fail the request
     }
+
     if (category) query.category = category;
 
-    const medicines = await Medicine.find(query)
-      .populate('category', 'name')
-      .populate('substitutes', 'name brand strength')
-      .skip((page - 1) * limit)
-      .limit(Number(limit))
-      .sort({ searchCount: -1 });
+    // ── Sorting ──
+    let sortOption = { searchCount: -1, createdAt: -1 };
+    if (sort === 'name') sortOption = { name: 1 };
+    else if (sort === 'newest') sortOption = { createdAt: -1 };
 
-    const total = await Medicine.countDocuments(query);
-    res.json({ success: true, data: medicines, total, page: Number(page), pages: Math.ceil(total / limit) });
+    const pageNum = Math.max(1, parseInt(page) || 1);
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit) || 20));
+
+    const [medicines, total] = await Promise.all([
+      Medicine.find(query)
+        .populate('category', 'name')
+        .populate('substitutes', 'name brand strength')
+        .skip((pageNum - 1) * limitNum)
+        .limit(limitNum)
+        .sort(sortOption)
+        .lean(),
+      Medicine.countDocuments(query),
+    ]);
+
+    res.json({
+      success: true,
+      data: medicines,
+      total,
+      page: pageNum,
+      pages: Math.ceil(total / limitNum),
+      query: q || null,
+    });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    console.error('getMedicines error:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to fetch medicines. Please try again.' });
   }
 };
 
@@ -50,10 +83,14 @@ exports.getMedicine = async (req, res) => {
   }
 };
 
-// @GET /api/medicines/nearby?lat=&lng=&medicineName=&maxDistance=
+// @GET /api/medicines/nearby?lat=&lng=&medicineId=&maxDistance=
 exports.getNearbyAvailability = async (req, res) => {
   try {
     const { lat, lng, medicineId, maxDistance = 10000 } = req.query;
+
+    if (!lat || !lng || !medicineId) {
+      return res.status(400).json({ success: false, message: 'lat, lng, and medicineId are required' });
+    }
 
     const nearbyPharmacies = await Pharmacy.find({
       isVerified: true,

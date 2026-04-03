@@ -27,6 +27,10 @@ const medicineSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-medicineSchema.index({ name: 'text', brand: 'text', composition: 'text' });
+// Individual indexes for regex search performance
+medicineSchema.index({ name: 1 });
+medicineSchema.index({ brand: 1 });
+medicineSchema.index({ composition: 1 });
+medicineSchema.index({ isActive: 1, searchCount: -1 });
 
 module.exports = mongoose.model('Medicine', medicineSchema);

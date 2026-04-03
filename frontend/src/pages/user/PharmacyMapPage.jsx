@@ -85,10 +85,19 @@ export default function PharmacyMapPage() {
         {/* Embedded Map */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           style={{ borderRadius: 20, overflow: 'hidden', marginBottom: 24, border: '1px solid rgba(255,255,255,0.1)', height: 350 }}>
-          <iframe
-            width="100%" height="350" style={{ border: 0 }} loading="lazy" referrerPolicy="no-referrer-when-downgrade"
-            src={`https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=pharmacy+near+${userLoc ? `${userLoc.lat},${userLoc.lng}` : 'India'}&zoom=${userLoc ? 14 : 5}`}
-          />
+          {import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? (
+            <iframe
+              width="100%" height="350" style={{ border: 0 }} loading="lazy" referrerPolicy="no-referrer-when-downgrade"
+              src={`https://www.google.com/maps/embed/v1/search?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=pharmacy+near+${userLoc ? `${userLoc.lat},${userLoc.lng}` : 'India'}&zoom=${userLoc ? 14 : 5}`}
+            />
+          ) : (
+            <div style={{ width: '100%', height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', flexDirection: 'column', gap: 12 }}>
+              <MapPin size={40} style={{ color: 'rgba(255,255,255,0.3)' }} />
+              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, textAlign: 'center', maxWidth: 300 }}>
+                Map view is available when Google Maps API key is configured. Use the directions links below to navigate.
+              </p>
+            </div>
+          )}
         </motion.div>
 
         {/* Pharmacy List */}
