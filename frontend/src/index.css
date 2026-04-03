@@ -1,0 +1,470 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    @apply text-slate-800 bg-slate-50;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    @apply tracking-tight;
+  }
+  .dark body { @apply bg-slate-950 text-slate-100; }
+}
+
+@layer components {
+  /* Premium Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold rounded-2xl text-sm
+      text-white bg-gradient-to-r from-brand-500 to-indigo-500 shadow-[0_8px_20px_-6px_rgba(99,102,241,0.5)]
+      hover:shadow-[0_12px_24px_-8px_rgba(99,102,241,0.6)] hover:-translate-y-0.5 active:translate-y-0
+      active:scale-[0.98] transition-all duration-300 relative overflow-hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    @apply absolute inset-0 bg-white/20 translate-y-full transition-transform duration-300;
+  }
+  .btn-primary:hover::after { @apply translate-y-0; }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold rounded-2xl text-sm
+      text-brand-600 bg-brand-50 border border-brand-200 shadow-sm
+      hover:bg-white hover:border-brand-300 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0
+      active:scale-[0.98] transition-all duration-300;
+  }
+  
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-medium rounded-xl text-sm
+      text-slate-600 hover:text-brand-600 hover:bg-slate-100/80 active:bg-slate-200/80 
+      transition-colors duration-200;
+  }
+
+  /* Glassmorphism & Cards */
+  .card {
+    @apply bg-white/90 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/40;
+  }
+  .card-hover {
+    @apply hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 ease-out;
+  }
+  
+  .glass {
+    @apply bg-white/70 backdrop-blur-lg border border-white/50 shadow-glass;
+  }
+  .glass-dark {
+    @apply bg-slate-900/80 backdrop-blur-xl border border-white/10;
+  }
+
+  /* Form Elements */
+  .input {
+    @apply w-full px-5 py-3.5 rounded-2xl border border-slate-200/80 bg-slate-50/50 text-slate-800
+      placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-400
+      focus:bg-white transition-all duration-300 text-sm shadow-sm;
+  }
+  .label { @apply block text-sm font-semibold text-slate-700 mb-2 ml-1; }
+  
+  /* Typography */
+  .section-title { @apply font-display font-extrabold text-4xl md:text-5xl text-slate-900 tracking-tight leading-tight; }
+  .section-sub   { @apply text-slate-500 text-lg md:text-xl mt-4 max-w-2xl font-medium; }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase;
+  }
+  .badge-green  { @apply badge bg-emerald-100 text-emerald-700 shadow-sm border border-emerald-200/50; }
+  .badge-red    { @apply badge bg-rose-100 text-rose-700 shadow-sm border border-rose-200/50; }
+  .badge-yellow { @apply badge bg-amber-100 text-amber-700 shadow-sm border border-amber-200/50; }
+  .badge-blue   { @apply badge bg-indigo-100 text-indigo-700 shadow-sm border border-indigo-200/50; }
+  .badge-gray   { @apply badge bg-slate-100 text-slate-600 shadow-sm border border-slate-200/50; }
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+.animate-float { animation: float 4s ease-in-out infinite; }
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { @apply bg-transparent; }
+::-webkit-scrollbar-thumb { @apply bg-slate-300/80 rounded-full border-2 border-slate-50; }
+::-webkit-scrollbar-thumb:hover { @apply bg-slate-400; }
+
+/* Page transitions */
+.page-enter { animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* Stock indicator */
+.stock-high   { @apply text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md text-xs font-semibold; }
+.stock-medium { @apply text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-md text-xs font-semibold; }
+.stock-low    { @apply text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-md text-xs font-semibold; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MedAssist Panel — Floating AI Chat & Search
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── FAB (Floating Action Button) ─────────────────────────────── */
+.medassist-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  border: none;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+}
+
+.medassist-fab-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+  color: white;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 15px;
+  font-family: 'Outfit', sans-serif;
+  box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.5), 0 8px 10px -6px rgba(124, 58, 237, 0.3);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 2;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.medassist-fab:hover .medassist-fab-inner {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 30px -5px rgba(124, 58, 237, 0.5), 0 10px 15px -5px rgba(124, 58, 237, 0.3);
+}
+
+.medassist-fab-label { letter-spacing: 0.5px; }
+
+.medassist-fab-pulse {
+  position: absolute;
+  inset: -6px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(217, 70, 239, 0.4));
+  z-index: 1;
+  animation: pulse-glow 2.5s ease-in-out infinite;
+  filter: blur(8px);
+}
+
+/* ── Backdrop ─────────────────────────────────────────────────── */
+.medassist-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+}
+
+/* ── Panel Container ──────────────────────────────────────────── */
+.medassist-panel {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 440px;
+  height: 650px;
+  max-height: calc(100vh - 48px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 28px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255,255,255,0.8) inset;
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+@media (max-width: 480px) {
+  .medassist-panel {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 90vh;
+    border-radius: 28px 28px 0 0;
+  }
+}
+
+/* ── Header ───────────────────────────────────────────────────── */
+.medassist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: white;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.medassist-header::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.medassist-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1;
+}
+
+.medassist-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  color: #fff;
+}
+
+.medassist-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+}
+
+.medassist-subtitle {
+  font-size: 11px;
+  opacity: 0.8;
+  font-family: 'Inter', sans-serif;
+}
+
+.medassist-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+}
+
+.medassist-reset-btn,
+.medassist-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+.medassist-reset-btn:hover,
+.medassist-close-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+
+/* ── Panel Tabs ───────────────────────────────────────────────── */
+.medassist-main-tabs {
+  display: flex;
+  background: #f8fafc;
+  padding: 6px 6px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+.medassist-main-tab {
+  flex: 1;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  border-radius: 12px 12px 0 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: -1px;
+}
+.medassist-main-tab:hover { color: #6366f1; background: #f1f5f9; }
+.medassist-main-tab.active {
+  color: #4f46e5;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-bottom-color: white;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.02);
+}
+
+/* ── Content Area ────────────────────────────────────────────── */
+.medassist-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Chatbot UI ───────────────────────────────────────────────── */
+.medbot-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 16px;
+}
+.medbot-message {
+  display: flex;
+  gap: 12px;
+  max-width: 90%;
+  animation: slideUpFade 0.3s ease-out;
+}
+.medbot-message.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+.medbot-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+.medbot-message.user .medbot-avatar {
+  background: #e2e8f0;
+  color: #475569;
+}
+.medbot-bubble {
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1e293b;
+  background: #f1f5f9;
+  border-top-left-radius: 4px;
+}
+.medbot-message.user .medbot-bubble {
+  background: #6366f1;
+  color: white;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 4px;
+}
+
+.medbot-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.medbot-action-btn {
+  padding: 6px 12px;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.medbot-action-btn:hover {
+  background: #f8fafc;
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.medbot-input-area {
+  padding: 12px 16px;
+  background: white;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  gap: 8px;
+}
+.medbot-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+}
+.medbot-input:focus {
+  background: white;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+}
+.medbot-send-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(99,102,241,0.3);
+}
+.medbot-send-btn:hover { transform: scale(1.05); }
+.medbot-send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* Disclaimer inside Chat */
+.medbot-disclaimer {
+  font-size: 11px;
+  color: #64748b;
+  text-align: center;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* Custom Alert Styles */
+.medbot-alert {
+  background: #fff1f2;
+  border: 1px solid #ffe4e6;
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.medbot-alert-icon { color: #e11d48; margin-top: 2px; }
+.medbot-alert-text { font-size: 12px; color: #9f1239; line-height: 1.4; }
