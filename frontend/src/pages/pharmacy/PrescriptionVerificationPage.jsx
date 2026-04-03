@@ -50,7 +50,7 @@ export function PrescriptionVerificationPage() {
                     <p className="text-xs text-slate-400 mt-1">{new Date(p.createdAt).toLocaleDateString('en-IN')}</p>
                   </div>
                   <div className="flex gap-2 shrink-0">
-                    <button onClick={() => setViewImg(`http://localhost:5000${p.imageUrl}`)}
+                    <button onClick={() => setViewImg(`${import.meta.env.VITE_API_URL}${p.imageUrl}`)}
                       className="btn-ghost text-xs py-2"><Eye size={13} /> View</button>
                     {p.status === 'pending' && (
                       <>
