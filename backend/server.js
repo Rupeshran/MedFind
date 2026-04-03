@@ -19,7 +19,7 @@ uploadDirs.forEach(dir => {
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://med-find.vercel.app' // your frontend URL
+    'https://med-find-one.vercel.app' // your frontend URL
   ],
   credentials: true
 }));
