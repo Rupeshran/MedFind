@@ -16,7 +16,13 @@ uploadDirs.forEach(dir => {
 });
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://med-find.vercel.app' // your frontend URL
+  ],
+  credentials: true
+}));
 
 // Stripe Webhook needs the raw body
 app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), require('./controllers/paymentController').stripeWebhook);
