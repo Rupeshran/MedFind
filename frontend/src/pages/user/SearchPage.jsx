@@ -74,7 +74,9 @@ export function SearchResultsPage() {
     setLoading(true)
     try {
       const { data } = await api.get(`/medicines?q=${encodeURIComponent(q)}&page=${pg}&limit=12`)
-      setResults(pg === 1 ? data.data : prev => [...prev, ...data.data])
+      setResults(prev =>
+      pg === 1 ? data.data : [...prev, ...data.data]
+      )
       setTotal(data.total)
     } catch {
       toast.error('Search failed')
