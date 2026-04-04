@@ -30,13 +30,20 @@ const seed = async () => {
   console.log(`✅ ${categories.length} Categories seeded`);
 
   // ── Users ────────────────────────────────────────────────────────
-  const hashedPass = await bcrypt.hash('password123', 12);
   const users = [];
-  for (const u of userData) {
-    const user = await User.create({ ...u, password: hashedPass, isActive: true });
-    users.push(user);
-  }
-  console.log(`✅ ${users.length} Users seeded`);
+
+ for (const u of userData) {
+  const user = await User.create({
+    ...u,
+    password: "password123",
+    isActive: true,
+  });
+
+  users.push(user);
+ }
+
+console.log(`✅ ${users.length} Users seeded`);
+  
 
   // ── Pharmacies ───────────────────────────────────────────────────
   const pharmacies = [];
